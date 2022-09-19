@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-kweensklubapp-dev-141201-authRole",
+      "UnauthRoleArn": "arn:aws:iam::618477552599:role/amplify-kweensklubapp-dev-141201-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::618477552599:role/amplify-kweensklubapp-dev-141201-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-kweensklubapp-dev-141201-deployment",
+      "UnauthRoleName": "amplify-kweensklubapp-dev-141201-unauthRole",
+      "StackName": "amplify-kweensklubapp-dev-141201",
+      "StackId": "arn:aws:cloudformation:us-west-2:618477552599:stack/amplify-kweensklubapp-dev-141201/b51404b0-385f-11ed-8c98-0ae8e4d9f703",
+      "AmplifyAppId": "d1yzix4r27s4ia"
+    },
+    "categories": {
+      "auth": {
+        "kweensklubapp1f77dfd0": {}
+      }
+    }
+  }
+}
