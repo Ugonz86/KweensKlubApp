@@ -13,7 +13,7 @@ function SignOut({ updateAuthState, str }) {
   }
   return (
     <View style={styles.body}>
-          <Text style={styles.text}>Confirm sign out</Text>
+          <Text style={styles.text}>Confirm Sign Out</Text>
                 <Pressable
               onPress={signOut}
               style={styles.buttonStyle}
@@ -38,8 +38,9 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-      fontSize: 40,
-      fontWeight: "bold",
+      fontSize: 30,
+    fontWeight: "bold",
+    marginVertical: 15,
   },
   buttonStyle: {
       

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Auth } from "aws-amplify";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppTextInput from "../components/AppTextInput";
 import AppButton from "../components/AppButton";
+
 export default function SignIn({ navigation, updateAuthState }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +21,12 @@ export default function SignIn({ navigation, updateAuthState }) {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>Sign in to your Kweens account</Text>
+      <Image
+                source={require("../images/kklogo2.png")}
+                // color={focused ? "red" : "#999999"}
+                style={styles.logo}
+              />
+        <Text style={styles.title}>Sign in to your Kweens Klub account</Text>
         <AppTextInput
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -44,8 +50,9 @@ export default function SignIn({ navigation, updateAuthState }) {
         <View style={styles.footerButtonContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text style={styles.forgotPasswordButtonText}>
-              Don't have a Kweens account? Sign Up Now
+              Don't have a Kweens account?
             </Text>
+            <Text style={{fontWeight: 'bold', color: 'grey', fontSize: 18, textAlign: 'center'}}>Sign Up Now</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -56,15 +63,16 @@ export default function SignIn({ navigation, updateAuthState }) {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "black",
   },
   container: {
     flex: 1,
     alignItems: "center",
+    
   },
   title: {
-    fontSize: 20,
-    color: "#202020",
+    fontSize: 17,
+    color: "grey",
     fontWeight: "500",
     marginVertical: 15,
   },
@@ -74,8 +82,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   forgotPasswordButtonText: {
-    color: "tomato",
-    fontSize: 18,
-    fontWeight: "600",
+
+    color: "grey",
+    fontSize: 16,
+ 
   },
+  logo: {
+    width: 80,
+    height: 80,
+    tintColor: "white",
+    marginVertical: 15,
+    // marginBottom: 20,
+    alignSelf: "center",
+  }
 });

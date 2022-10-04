@@ -14,6 +14,23 @@
     "categories": {
       "auth": {
         "kweensklubapp1f77dfd0": {}
+      },
+      "function": {
+        "contactformuploader": {
+          "sesEmail": "kkappdevtester@gmail.com",
+          "deploymentBucketName": "amplify-kweensklubapp-dev-141201-deployment",
+          "s3Key": "amplify-builds/contactformuploader-414b7547636431315a58-build.zip"
+        },
+        "contactformfunction": {
+          "sesEmail": "kkappdevtester@gmail.com",
+          "deploymentBucketName": "amplify-kweensklubapp-dev-141201-deployment",
+          "s3Key": "amplify-builds/contactformfunction-666f434d52446f2b714e-build.zip"
+        },
+        "contactformuploader2": {
+          "sesEmail": "kkappdevtester@gmail.com",
+          "deploymentBucketName": "amplify-kweensklubapp-dev-141201-deployment",
+          "s3Key": "amplify-builds/contactformuploader2-6869754b706958376a41-build.zip"
+        }
       }
     }
   }
