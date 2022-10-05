@@ -1,11 +1,6 @@
-import React, { useState } from "react";
-import { Text, View, TextInput, Button, Alert, StyleSheet } from "react-native";
+import React from "react";
+import { Text, View, TextInput, Button, StyleSheet } from "react-native";
 import { useForm, Controller } from "react-hook-form";
-
-// import Amplify from '@aws-amplify/core'
-// import awsmobile from '../src/aws-exports'
-
-// Amplify.configure(awsmobile)
 
 import { API } from "aws-amplify";
 import { createCandidate } from "../graphql/mutations";
@@ -25,10 +20,10 @@ export default function App() {
       message: "",
     },
   });
+
   renderCount++;
-  const name = watch("name"),
-    email = watch("email"),
-    message = watch("message");
+
+  const message = watch("message");
   // console.log(watch(message))
 
   const onSubmit = async (data, e) => {
@@ -47,27 +42,26 @@ export default function App() {
         );
       } catch {
         alert(errors);
-        console.log("error")
+        console.log("error");
       }
     } else {
       alert("Please make sure your entries are valid!");
-      console.log("invalid")
+      console.log("invalid");
     }
-    // resetField("name");
-    // resetField("email");
-    // resetField("message");
     console.log(data);
   };
 
   return (
     <View style={styles.container}>
-      {errors.name && <Text style={{color: 'red'}}>This field is required.</Text>}
+      {errors.name && (
+        <Text style={{ color: "red" }}>This field is required.</Text>
+      )}
       <Controller
         name="name"
         control={control}
         rules={{
           required: true,
-          minLength: 5
+          minLength: 5,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
@@ -81,7 +75,9 @@ export default function App() {
         )}
       />
 
-      {errors.email && <Text style={{color: 'red'}}>This field is required.</Text>}
+      {errors.email && (
+        <Text style={{ color: "red" }}>This field is required.</Text>
+      )}
       <Controller
         name="email"
         control={control}
@@ -103,7 +99,9 @@ export default function App() {
         )}
       />
 
-      {errors.message && <Text style={{color: 'red'}}>This field is required.</Text>}
+      {errors.message && (
+        <Text style={{ color: "red" }}>This field is required.</Text>
+      )}
       <Controller
         name="message"
         defaultValue=""
@@ -123,24 +121,18 @@ export default function App() {
             value={value}
             multiline={true}
             placeholder="Message"
-            // defaultValue='message'
             {...register("message")}
           />
         )}
-
-        // `${value.length}`
       />
-
-      {/* <Text style={{ fontSize: 12, color: "#3d3d3d" }}>{value.length}/500</Text> */}
-
-      {/* <Text style={{ fontSize: 12, color: "#3d3d3d" }}> */}
-      <Text style={{ fontSize: 13, color: "grey" }}>
-        {message.length}/500
-      </Text>
+      <Text style={{ fontSize: 13, color: "grey" }}>{message.length}/500</Text>
       <View style={styles.submitButton}>
-      <Button color="white" title="Submit" onPress={handleSubmit(onSubmit)}></Button>
+        <Button
+          color="white"
+          title="Submit"
+          onPress={handleSubmit(onSubmit)}
+        ></Button>
       </View>
-      
     </View>
   );
 }
@@ -155,27 +147,24 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "lightgrey",
-    width: 300,
+    width: 350,
     height: 40,
     marginVertical: 20,
     borderRadius: 5,
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   msg: {
     backgroundColor: "lightgrey",
-    width: 300,
+    width: 350,
     height: 200,
     marginVertical: 20,
     borderRadius: 5,
     paddingTop: 10,
     padding: 10,
-    // top: 5
-    
-    // fontSize: 15
   },
   submitButton: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     borderRadius: 5,
     top: 50,
-  }
+  },
 });

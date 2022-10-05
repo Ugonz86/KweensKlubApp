@@ -1,5 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+
 export default function AppButton({ title, onPress }) {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
@@ -7,20 +8,20 @@ export default function AppButton({ title, onPress }) {
     </TouchableOpacity>
   );
 }
+
 const styles = StyleSheet.create({
   button: {
     marginVertical: 10,
     borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 15,
-    // width: '80%',
-    backgroundColor: 'red'
+    backgroundColor: "red",
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
-    fontWeight: '600',
-    textTransform: 'uppercase'
-  }
+    fontWeight: "600",
+    textTransform: "uppercase",
+  },
 });

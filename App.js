@@ -26,31 +26,38 @@ const AppStack = createStackNavigator();
 
 const AuthenticationNavigator = (props) => {
   return (
-    <AuthenticationStack.Navigator headerShown={"none"} >
-      <AuthenticationStack.Screen name="Sign In" options={{
-          
+    <AuthenticationStack.Navigator headerShown={false}>
+      <AuthenticationStack.Screen
+        name="SignIn"
+        options={{
+          title: "Sign In",
           headerStyle: {
-            backgroundColor: 'black',
+            backgroundColor: "black",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
           },
-        }}>
+        }}
+      >
         {(screenProps) => (
           <SignIn {...screenProps} updateAuthState={props.updateAuthState} />
         )}
       </AuthenticationStack.Screen>
-      <AuthenticationStack.Screen name="SignUp" component={SignUp} options={{
-          title: 'Sign Up',
+      <AuthenticationStack.Screen
+        name="SignUp"
+        component={SignUp}
+        options={{
+          title: "Sign Up",
           headerStyle: {
-            backgroundColor: 'black',
+            backgroundColor: "black",
           },
-          headerTintColor: '#fff',
+          headerTintColor: "#fff",
           headerTitleStyle: {
-            fontWeight: 'bold',
+            fontWeight: "bold",
           },
-        }}/>
+        }}
+      />
       <AuthenticationStack.Screen
         name="ConfirmSignUp"
         component={ConfirmSignUp}
@@ -61,7 +68,11 @@ const AuthenticationNavigator = (props) => {
 
 const AppNavigator = (props) => {
   return (
-    <AppStack.Navigator headerMode={"none"}>
+    <AppStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <AppStack.Screen name="Home">
         {(screenProps) => (
           <Home {...screenProps} updateAuthState={props.updateAuthState} />
@@ -81,11 +92,18 @@ const Initializing = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  console.log('initializing...')
+  console.log("initializing...");
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: 'black' }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "black",
+      }}
+    >
       {/* <ActivityIndicator size="large" color="red"/> */}
-      {show ? <ActivityIndicator size="large" color="red" /> : <Landing />}
+      {show ? <Landing /> : <ActivityIndicator size="large" color="red" />}
     </View>
   );
 };
@@ -125,23 +143,22 @@ function App() {
   }
 
   return (
-      <NavigationContainer>
-        {isUserLoggedIn === "initializing" && <Initializing />}
-        {isUserLoggedIn === "loggedIn" && (
-          <AppNavigator updateAuthState={updateAuthState} />
-        )}
-        {isUserLoggedIn === "loggedOut" && (
-          <AuthenticationNavigator updateAuthState={updateAuthState} />
-        )}
-      </NavigationContainer>
+    <NavigationContainer>
+      {isUserLoggedIn === "initializing" && <Initializing />}
+      {isUserLoggedIn === "loggedIn" && (
+        <AppNavigator updateAuthState={updateAuthState} />
+      )}
+      {isUserLoggedIn === "loggedOut" && (
+        <AuthenticationNavigator updateAuthState={updateAuthState} />
+      )}
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   body: {
     backgroundColor: "black",
-    
-}
+  },
 });
 
 export default App;

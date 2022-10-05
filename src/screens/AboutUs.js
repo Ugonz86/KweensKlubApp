@@ -2,10 +2,10 @@ import React from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 
 export default function AboutUs({ navigation }) {
-  const onPressHandler = () => {
-    navigation.navigate("Feed");
-    // navigation.goBack();
-  };
+  // const onPressHandler = () => {
+  //   navigation.navigate("Feed");
+  //   // navigation.goBack();
+  // };
 
   return (
     <View style={styles.body}>

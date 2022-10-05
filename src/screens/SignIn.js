@@ -21,17 +21,13 @@ export default function SignIn({ navigation, updateAuthState }) {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-      <Image
-                source={require("../images/kklogo2.png")}
-                // color={focused ? "red" : "#999999"}
-                style={styles.logo}
-              />
-        <Text style={styles.title}>Sign in to your Kweens Klub account</Text>
+        <Image source={require("../images/kklogo2.png")} style={styles.logo} />
+        <Text style={styles.title}>Sign In to your Kweens Klub account</Text>
         <AppTextInput
           value={username}
           onChangeText={(text) => setUsername(text)}
           leftIcon="account"
-          placeholder="Enter username"
+          placeholder="Enter Email"
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"
@@ -40,19 +36,28 @@ export default function SignIn({ navigation, updateAuthState }) {
           value={password}
           onChangeText={(text) => setPassword(text)}
           leftIcon="lock"
-          placeholder="Enter password"
+          placeholder="Enter Password"
           autoCapitalize="none"
           autoCorrect={false}
           secureTextEntry
           textContentType="password"
         />
-        <AppButton title="Login" onPress={signIn} />
+        <AppButton title="Sign In" onPress={signIn} />
         <View style={styles.footerButtonContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
             <Text style={styles.forgotPasswordButtonText}>
-              Don't have a Kweens account?
+              Don't have a Kweens Klub account?
             </Text>
-            <Text style={{fontWeight: 'bold', color: 'grey', fontSize: 18, textAlign: 'center'}}>Sign Up Now</Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: "grey",
+                fontSize: 18,
+                textAlign: "center",
+              }}
+            >
+              Sign Up Now
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -68,7 +73,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    
   },
   title: {
     fontSize: 17,
@@ -82,17 +86,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   forgotPasswordButtonText: {
-
     color: "grey",
     fontSize: 16,
- 
   },
   logo: {
     width: 80,
     height: 80,
     tintColor: "white",
     marginVertical: 15,
-    // marginBottom: 20,
     alignSelf: "center",
-  }
+  },
 });

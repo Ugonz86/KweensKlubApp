@@ -1,19 +1,14 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
   Text,
   Pressable,
-  TextInput,
-  Button,
-  TouchableHighlight,
-  Alert,
   Image,
   FlatList,
   TouchableOpacity,
   Modal,
 } from "react-native";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function EventsView() {
   const [data, setData] = useState([
@@ -24,7 +19,7 @@ export default function EventsView() {
       performer: "Valentina",
       time: "10:00 pm to 1:00 am",
       description: "Enter event description here.",
-      promo: require("../images/valentina.png"), 
+      promo: require("../images/valentina.png"),
     },
     {
       id: 2,
@@ -33,7 +28,7 @@ export default function EventsView() {
       performer: "Vangie",
       time: "10:00 pm - 1:00 am",
       description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/vangie.png"), 
+      promo: require("../images/vangie.png"),
     },
     {
       id: 3,
@@ -42,7 +37,7 @@ export default function EventsView() {
       performer: "Alexis Mateo",
       time: "10:00 pm - 1:00 am",
       description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/alexismateo.png"), 
+      promo: require("../images/alexismateo.png"),
     },
     {
       id: 4,
@@ -51,7 +46,7 @@ export default function EventsView() {
       performer: "Alyssa Hunter",
       time: "10:00 pm - 1:00 am",
       description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/alyssahunter.png"), 
+      promo: require("../images/alyssahunter.png"),
     },
     {
       id: 5,
@@ -60,7 +55,8 @@ export default function EventsView() {
       performer: "Bianca Del Rio",
       time: "10:00 pm - 1:00 am",
       description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: "", promo: require("../images/bianca.png"), 
+      promo: "",
+      promo: require("../images/bianca.png"),
     },
     {
       id: 6,
@@ -69,7 +65,7 @@ export default function EventsView() {
       performer: "Jorgeous",
       time: "10:00 pm - 1:00 am",
       description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/jorgeous.png"), 
+      promo: require("../images/jorgeous.png"),
     },
     {
       id: 7,
@@ -78,7 +74,7 @@ export default function EventsView() {
       performer: "Shangela",
       time: "10:00 pm - 1:00 am",
       description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/shangela.png"), 
+      promo: require("../images/shangela.png"),
     },
     {
       id: 8,
@@ -126,6 +122,7 @@ export default function EventsView() {
       promo: "", //image
     },
   ]);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({});
 
@@ -149,30 +146,20 @@ export default function EventsView() {
         <View style={styles.centeredView2}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              On {selectedEvent.month} {selectedEvent.day}{"\n"}
-              Guest Performer - {selectedEvent.performer}{"\n"}
+              On {selectedEvent.month} {selectedEvent.day}
+              {"\n"}
+              Guest Performer - {selectedEvent.performer}
+              {"\n"}
               From {selectedEvent.time}
               {"\n"}
               {"\n"}
-              Event Details: {"\n"}{selectedEvent.description}
+              Event Details: {"\n"}
+              {selectedEvent.description}
               {"\n"}
-              {/* {"\n"} */}
-              {/* *Promo image goes here* */}
-              {/* {"\n"}
-              {"\n"} */}
-              {/* <FontAwesome5
-                name="image"
-                style={{ fontSize: 60 }}
-              /> */}
-              {/* {"\n"}
-              {"\n"} */}
             </Text>
             <Image style={styles.image} source={selectedEvent.promo} />
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Ok</Text>
+            <Pressable onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
             </Pressable>
           </View>
         </View>
@@ -260,7 +247,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#080808",
-    // opacity: 0.95,
   },
   modalView: {
     flex: 1,
@@ -271,7 +257,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: 386,
-    // height: 500,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -292,16 +277,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   textStyle: {
-    color: "black",
-    fontWeight: "bold",
+    color: "red",
     textAlign: "center",
+    shadowColor: "red",
+    fontSize: 15,
+    shadowRadius: 3,
+    shadowOpacity: 3,
+    shadowOffset: 3,
   },
   modalText: {
     fontSize: 20,
     color: "white",
     marginBottom: 15,
-    // fontWeight: 'bold',
-    // textAlign: "center",
   },
   image: {
     // resizeMode: 'contain',
@@ -310,7 +297,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: 'black'
-  }
+    backgroundColor: "black",
+  },
 });
-console.disableYellowBox = true;
+
+// console.disableYellowBox = true;

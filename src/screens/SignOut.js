@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Auth } from "aws-amplify";
 
-function SignOut({ updateAuthState, str }) {
+function SignOut({ updateAuthState }) {
   async function signOut() {
     try {
       await Auth.signOut();
@@ -13,17 +13,10 @@ function SignOut({ updateAuthState, str }) {
   }
   return (
     <View style={styles.body}>
-          <Text style={styles.text}>Confirm Sign Out</Text>
-                <Pressable
-              onPress={signOut}
-              style={styles.buttonStyle}
-                // style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })}
-            >
-                <Text style={styles.btntext}>
-                    Sign Out
-                </Text>
-            </Pressable>
-          {/* <Button title="Sign Out" onPress={signOut} /> */}
+      <Text style={styles.text}>Confirm Sign Out</Text>
+      <Pressable onPress={signOut} style={styles.buttonStyle}>
+        <Text style={styles.btntext}>Sign Out</Text>
+      </Pressable>
     </View>
   );
 }
@@ -38,22 +31,19 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-      fontSize: 30,
+    fontSize: 30,
     fontWeight: "bold",
     marginVertical: 15,
   },
   buttonStyle: {
-      
-    //   borderWidth: 2,
-    //   background: 'rgb(255,0,0)',
-      backgroundColor: 'red',
-      padding: 10,
-      borderRadius: 5
-    },
-    btntext: {
-        fontSize: 20,
-        color: 'white'
-    }
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+  },
+  btntext: {
+    fontSize: 20,
+    color: "white",
+  },
 });
 
 export default SignOut;

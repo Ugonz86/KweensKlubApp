@@ -4,6 +4,7 @@ import { Auth } from "aws-amplify";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppTextInput from "../components/AppTextInput";
 import AppButton from "../components/AppButton";
+
 export default function SignUp({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,12 +21,11 @@ export default function SignUp({ navigation }) {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-      <Image
-                source={require("../images/kklogo2.png")}
-                // color={focused ? "red" : "#999999"}
-                style={styles.logo}
-              />
-        <Text style={styles.title}>Create a new Kweens Klub account</Text>
+        <Image source={require("../images/kklogo2.png")} style={styles.logo} />
+        <Text style={styles.title}>
+          Sign Up to make reservations, purchase memberships, receive news of
+          upcoming events and more!
+        </Text>
         <AppTextInput
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -58,9 +58,18 @@ export default function SignUp({ navigation }) {
         <View style={styles.footerButtonContainer}>
           <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
             <Text style={styles.forgotPasswordButtonText}>
-              Already have an Kweens account?
+              Already have an Kweens Klub account?
             </Text>
-            <Text style={{fontWeight: 'bold', color: 'grey', fontSize: 18, textAlign: 'center'}}>Sign In</Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: "grey",
+                fontSize: 18,
+                textAlign: "center",
+              }}
+            >
+              Sign In
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -82,6 +91,7 @@ const styles = StyleSheet.create({
     color: "grey",
     fontWeight: "500",
     marginVertical: 15,
+    padding: 10,
   },
   footerButtonContainer: {
     marginVertical: 15,
@@ -97,8 +107,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     tintColor: "white",
-    marginVertical: 15,
-    // marginBottom: 20,
     alignSelf: "center",
-  }
+  },
 });
