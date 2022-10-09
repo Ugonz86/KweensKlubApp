@@ -8,16 +8,18 @@ import AppButton from "../components/AppButton";
 export default function SignIn({ navigation, updateAuthState }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   async function signIn() {
     try {
       await Auth.signIn(username, password);
-      console.log("✅ Success");
+      console.log("✅ Success", username);
       updateAuthState("loggedIn");
     } catch (error) {
       console.log("❌ Error signing in...", error);
       alert("Error. Please try again.");
     }
   }
+
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>

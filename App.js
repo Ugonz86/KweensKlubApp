@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, View, StyleSheet } from "react-native";
+import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import Amplify, { Auth } from "aws-amplify";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -8,18 +8,10 @@ import SignIn from "./src/screens/SignIn";
 import SignUp from "./src/screens/SignUp";
 import ConfirmSignUp from "./src/screens/ConfirmSignUp";
 import Home from "./src/screens/Home";
-// import Navigation from "./Navigation";
 import Landing from "./src/screens/Landing";
-import Messages from "./src/screens/ContactUs";
-// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import "react-native-gesture-handler";
-// import { createDrawerNavigator } from "@react-navigation/drawer";
-
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 Amplify.configure(awsmobile);
-
-// import { withAuthenticator } from 'aws-amplify-react-native';
 
 const AuthenticationStack = createStackNavigator();
 const AppStack = createStackNavigator();
@@ -102,32 +94,20 @@ const Initializing = () => {
         backgroundColor: "black",
       }}
     >
-      {/* <ActivityIndicator size="large" color="red"/> */}
       {show ? <Landing /> : <ActivityIndicator size="large" color="red" />}
     </View>
   );
 };
 
-// const Tab = createBottomTabNavigator();
-// const Drawer = createDrawerNavigator();
-
-function App() {
+function App({ username }) {
   const [isUserLoggedIn, setUserLoggedIn] = useState("initializing");
-
-  // const [fontLoaded, setFontLoaded] = useState(false);
-  // if(!fontLoaded) {
-  //   return <AppLoading
-  //     startAsync = { fetchFonts }
-  //     onError = { console.warn }
-  //     onFinish = { () => setFontLoaded(true) }
-  //   />
-  // }
 
   useEffect(() => {
     checkAuthState();
   }, []);
 
   async function checkAuthState() {
+    // const user = Auth.currentAuthenticatedUser();
     try {
       await Auth.currentAuthenticatedUser();
       console.log("✅ User is signed in");
@@ -155,10 +135,6 @@ function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  body: {
-    backgroundColor: "black",
-  },
-});
+const styles = StyleSheet.create({});
 
 export default App;

@@ -23,9 +23,10 @@ function SignOut({ updateAuthState }) {
 
 const styles = StyleSheet.create({
   body: {
+    flex: 1,
     backgroundColor: "black",
-    height: "100%",
-    margin: "auto",
+    // height: "100%",
+    // margin: "auto",
     justifyContent: "center",
     alignItems: "center",
   },

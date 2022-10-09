@@ -6,11 +6,9 @@ export default function Memberships({ navigation }) {
   return (
     <View style={styles.body}>
       <Image source={require("../images/m-options.jpg")} style={styles.image} />
-      <TouchableOpacity
-        style={styles.body}
-        onPress={() => navigation.navigate("ContactUs")}
-      >
-        <Text style={{ color: "grey", padding: 10 }}>
+
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>
           To request your membership, please send us your full name, email and
           in the message box, include your mailing address and choice of
           membership then we'll send you the next steps.
@@ -18,14 +16,15 @@ export default function Memberships({ navigation }) {
         <Text style={{ color: "#d4af37" }}>Gold: $100.00</Text>
         <Text style={{ color: "#C0C0C0" }}>Silver: $75.00</Text>
         <Text style={{ color: "#b08d57" }}>Bronze: $50.00</Text>
-
-        <FontAwesome5
-          name="envelope"
-          size={30}
-          color="grey"
-          style={{ marginVertical: 10 }}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ContactUs")}>
+          <FontAwesome5
+            name="envelope"
+            size={30}
+            color="grey"
+            style={{ marginVertical: 10 }}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -38,13 +37,22 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   text: {
-    color: "white",
+    color: "grey",
+    padding: 10,
+    justifyContent: "space-evenly",
   },
   image: {
     width: 400,
     height: 420,
     borderRadius: 10,
-    marginVertical: 25,
+    marginVertical: 15,
   },
   contactButton: {},
+  textContainer: {
+    alignItems: "center",
+    backgroundColor: "#080808",
+    borderRadius: 5,
+    width: 400,
+    padding: 10,
+  },
 });

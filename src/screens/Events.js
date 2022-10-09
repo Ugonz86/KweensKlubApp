@@ -199,11 +199,14 @@ export default function EventsView() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
+    paddingBottom: 50,
+    width: '100%'
   },
   eventList: {
-    marginTop: 20,
+    // marginTop: 20,
   },
   eventBox: {
+    width: 400,
     padding: 20,
     flexDirection: "row",
   },
@@ -227,7 +230,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     backgroundColor: "#080808",
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     overflow: "hidden",
   },
   description: {

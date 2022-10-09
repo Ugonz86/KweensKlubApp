@@ -15,18 +15,18 @@ import { Auth, autoShowTooltip } from "aws-amplify";
 const Drawer = createDrawerNavigator();
 
 function Home({ updateAuthState, navigation }) {
-  const onPressHandler = () => {
-    navigation.navigate("SignOut");
-  };
+  // const onPressHandler = () => {
+  //   navigation.navigate("SignOut");
+  // };
 
-  async function signOut() {
-    try {
-      await Auth.signOut();
-      updateAuthState("loggedOut");
-    } catch (error) {
-      console.log("Error signing out: ", error);
-    }
-  }
+  // async function signOut() {
+  //   try {
+  //     await Auth.signOut();
+  //     updateAuthState("loggedOut");
+  //   } catch (error) {
+  //     console.log("Error signing out: ", error);
+  //   }
+  // }
 
   return (
     <NavigationContainer independent={true} style={styles.navContainer}>
@@ -41,7 +41,7 @@ function Home({ updateAuthState, navigation }) {
 
           headerShown: true,
           swipeEnabled: true,
-          gestureEnabled: true,
+          // gestureEnabled: true,
           headerTitleAlign: "center",
 
           headerStyle: {
@@ -53,7 +53,9 @@ function Home({ updateAuthState, navigation }) {
             fontSize: 20,
             fontWeight: "bold",
           },
+          
         }}
+        
       >
         <Drawer.Screen
           name="Feed"
@@ -200,9 +202,7 @@ function Home({ updateAuthState, navigation }) {
             ),
           }}
         />
-
       </Drawer.Navigator>
-
       {/* <TouchableOpacity
         onPress={onPressHandler}
         style={styles.signOut}
@@ -210,6 +210,7 @@ function Home({ updateAuthState, navigation }) {
         <FontAwesome5 name="sign-out-alt" size={25} color={"#999999"} />
         <Text style={styles.text}>Sign Out</Text>
       </TouchableOpacity> */}
+      
     </NavigationContainer>
   );
 }
@@ -219,20 +220,20 @@ const styles = StyleSheet.create({
   signOut: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 40,
+    // padding: 40,
     backgroundColor: "black",
   },
   text: {
     color: "#999999",
     fontSize: 15,
   },
-  logo: {
-    width: 60,
-    height: 60,
-    tintColor: "white",
-    marginBottom: 80,
-    alignSelf: "center",
-  },
+  // logo: {
+  //   width: 60,
+  //   height: 60,
+  //   tintColor: "white",
+  //   marginBottom: 80,
+  //   alignSelf: "center",
+  // },
 });
 
 export default Home;

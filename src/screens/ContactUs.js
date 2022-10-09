@@ -53,6 +53,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Some Text Here</Text>
       {errors.name && (
         <Text style={{ color: "red" }}>This field is required.</Text>
       )}
@@ -143,11 +144,23 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     color: "white",
     alignItems: "center",
-    justifyContent: "center",
+    paddingTop: 60
+    // justifyContent: "center",
+  },
+  title: {
+    backgroundColor: "#080808",
+    width: 400,
+    borderRadius: 5,
+    color: "grey",
+    marginVertical: 20,
+    padding: 10,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    textAlign: 'center'
   },
   input: {
     backgroundColor: "lightgrey",
-    width: 350,
+    width: 400,
     height: 40,
     marginVertical: 20,
     borderRadius: 5,
@@ -155,7 +168,7 @@ const styles = StyleSheet.create({
   },
   msg: {
     backgroundColor: "lightgrey",
-    width: 350,
+    width: 400,
     height: 200,
     marginVertical: 20,
     borderRadius: 5,
