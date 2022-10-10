@@ -4,9 +4,14 @@
 
 ![ugx](./ugx.jpeg)
 
-## Features
+![ugx](./kka_plan.jpeg)
 
 ## Built With
+#### -Expo
+#### -React Native
+#### -JavaScript
+#### -AWS
+#### -GraphQL
 
 ## License
 
