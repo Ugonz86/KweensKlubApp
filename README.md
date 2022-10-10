@@ -2,9 +2,9 @@
 
 ## App description here
 
-->![ugx](./ugx.jpeg)<-
+![ugx](./ugx.jpeg){ style="display: block; margin: 0 auto" }
 
-->![plan](./kka_plan.jpg)<-
+![plan](./kka_plan.jpg){ style="display: block; margin: 0 auto" }
 
 ## Built With
 
