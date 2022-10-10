@@ -13,6 +13,12 @@
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "u.gonzalezrosario@gmail.com",
+        "ascAppId": "6443764803",
+        "appleTeamId": "MXY949J98P"
+      }
+    }
   }
 }
