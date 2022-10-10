@@ -4,7 +4,7 @@
 
 ![ugx](./ugx.jpeg)
 
-![ugx](./kka_plan.jpeg)
+![plan](./kka_plan.jpg)
 
 ## Built With
 #### -Expo
