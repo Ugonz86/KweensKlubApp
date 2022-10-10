@@ -2,16 +2,20 @@
 
 ## App description here
 
-![ugx](./ugx.jpeg)
+->![ugx](./ugx.jpeg)<-
 
-![plan](./kka_plan.jpg)
+->![plan](./kka_plan.jpg)<-
 
 ## Built With
-#### -Expo
-#### -React Native
-#### -JavaScript
-#### -AWS
-#### -GraphQL
+
+### -Expo
+
+### -React Native
+
+### -JavaScript
+
+### -AWS
+
+### -GraphQL
 
 ## License
-
