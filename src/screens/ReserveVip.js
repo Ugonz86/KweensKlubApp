@@ -466,15 +466,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: '100%',
+    backgroundColor: "black",
   },
   modalView: {
     flex: 1,
     margin: 20,
-    backgroundColor: "black",
     borderRadius: 10,
     paddingHorizontal: 10,
     justifyContent: "center",
-    width: 375,
     paddingBottom: 50,
   },
   modalText: {

@@ -57,7 +57,8 @@ export default function Feed({ navigation }) {
             <Text style={styles.button}>Reserve VIP</Text>
           </Pressable>
           <View style={styles.container}>
-            <Text style={styles.content}>{event.content}</Text>
+            {/* <Text style={styles.content}>{event.content}</Text> */}
+ 
           </View>
         </View>
       ) : (
@@ -76,6 +77,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   container: {
+    // flex: 1,
+    // position: "absolute",
+    // backgroundColor: "black",
     padding: 10,
     justifyContent: "center",
     alignItems: "center",

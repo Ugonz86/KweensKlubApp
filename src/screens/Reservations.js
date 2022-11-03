@@ -11,8 +11,8 @@ import {
   View,
   Text,
   Pressable,
-  FlatList,
   ScrollView,
+  TouchableOpacity
 } from "react-native";
 
 export default function Reservations({ navigation }) {
@@ -81,9 +81,12 @@ export default function Reservations({ navigation }) {
     fetchReservations();
   }
 
-  const onPressHandler = () => {
+  const goToReserveVip = () => {
     navigation.navigate("ReserveVip");
-    // navigation.goBack();
+  };
+
+  const goToContactUs = () => {
+    navigation.navigate("ContactUs");
   };
 
   return (
@@ -113,10 +116,17 @@ export default function Reservations({ navigation }) {
                   {"\n"} Party of: {res.party} guests
                   {"\n"}
                 </Text>
-                <Text style={{ color: "grey", marginVertical: 5 }}>
-                  To modify your reservation, please contact us at
-                  support@kweensklub.com.
+
+
+                <TouchableOpacity onPress={goToContactUs}>
+              <Text style={{ color: "grey", marginVertical: 5 }}>
+              To modify your reservation, please{" "}
+                <Text style={{ fontWeight: 'bold', textDecorationLine: "underline" }}>
+                  contact us{" "}
                 </Text>
+                directly.
+              </Text>
+            </TouchableOpacity>
 
                 {res.status == "canceled" ? (
                   <Text style={styles.cancelled}> Canceled </Text>
@@ -133,7 +143,7 @@ export default function Reservations({ navigation }) {
           ))}
         </ScrollView>
       </View>
-      <Pressable onPress={onPressHandler} style={styles.reserveVIPbutton}>
+      <Pressable onPress={goToReserveVip} style={styles.reserveVIPbutton}>
         <Text style={styles.buttonText}>Go Back</Text>
       </Pressable>
     </View>

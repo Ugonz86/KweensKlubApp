@@ -29,7 +29,7 @@
         "contactformuploader2": {
           "deploymentBucketName": "amplify-kweensklubapp-dev-141201-deployment",
           "s3Key": "amplify-builds/contactformuploader2-745175556b6b5a6f572b-build.zip",
-          "sesEmail": "ugonzalez86@gmail.com"
+          "sesEmail": "kweensklub1211@gmail.com"
         }
       },
       "api": {

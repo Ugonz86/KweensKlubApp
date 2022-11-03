@@ -92,8 +92,10 @@ const AuthenticationNavigator = (props) => {
 const AppNavigator = (props) => {
   return (
     <AppStack.Navigator
+    
       screenOptions={{
         headerShown: false,
+        
       }}
     >
       <AppStack.Screen name="Home">
@@ -167,6 +169,7 @@ function App({ username }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+});
 
 export default App;

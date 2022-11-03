@@ -29,7 +29,7 @@ export default function MoreInfo({ navigation }) {
               1. Each VIP space has a maximum allowance of 5 guests. If the
               party is greater than 5 guests, you will need to input the amount
               of guests. If the party is greater than 25, please{" "}
-              <Text style={{ color: "red", textDecorationLine: "underline" }}>
+              <Text style={{ fontWeight: 'bold', textDecorationLine: "underline" }}>
                 contact us
               </Text>{" "}
               and we'll offer a package that will adjust to your needs.

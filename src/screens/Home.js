@@ -9,8 +9,9 @@ import ReserveVip from "./ReserveVip";
 import Reservations from "./Reservations";
 import MoreInfo from "./MoreInfo";
 import AboutUs from "./AboutUs";
+import Landing from "./Landing";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import { StyleSheet, Text, Image, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { Auth } from "aws-amplify";
 
 const Drawer = createDrawerNavigator();
@@ -200,6 +201,28 @@ function Home({ updateAuthState }) {
             ),
           }}
         />
+
+{/* <Drawer.Screen
+          name="Landing"
+          
+          component={Landing}
+          options={{
+            headerShown: false,
+            title: "Landing",
+            drawerActiveBackgroundColor: "#1b1b1b",
+            drawerInactiveTintColor: "#999999",
+            drawerActiveTintColor: "white",
+            drawerLabelStyle: { fontSize: 20 },
+            drawerIcon: ({ focused }) => (
+              <FontAwesome5
+                name="envelope"
+                size={focused ? 60 : 40}
+                color={focused ? "red" : "#999999"}
+                style={{ marginRight: 46 }}
+              />
+            ),
+          }}
+        /> */}
 
         <Drawer.Screen
           name="SignOut"
