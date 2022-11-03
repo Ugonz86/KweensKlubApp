@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, View, StyleSheet, Text, Image } from "react-native";
 import Amplify, { Auth } from "aws-amplify";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -9,6 +9,8 @@ import SignUp from "./src/screens/SignUp";
 import ConfirmSignUp from "./src/screens/ConfirmSignUp";
 import Home from "./src/screens/Home";
 import Landing from "./src/screens/Landing";
+import ForgotPassword from "./src/screens/ForgotPassword";
+import ResetPassword from "./src/screens/ResetPassword";
 import "react-native-gesture-handler";
 
 Amplify.configure(awsmobile);
@@ -53,7 +55,36 @@ const AuthenticationNavigator = (props) => {
       <AuthenticationStack.Screen
         name="ConfirmSignUp"
         component={ConfirmSignUp}
+        options={{
+          title: "Confirm Sign Up",
+          headerStyle: {
+            backgroundColor: "black",
+          },
+          headerTintColor: "#fff",
+        }}
       />
+      <AuthenticationStack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+        options={{
+          title: "Forgot Password",
+          headerStyle: {
+            backgroundColor: "black",
+          },
+          headerTintColor: "#fff",
+        }}
+      ></AuthenticationStack.Screen>
+      <AuthenticationStack.Screen
+        name="ResetPassword"
+        component={ResetPassword}
+        options={{
+          title: "Reset Password",
+          headerStyle: {
+            backgroundColor: "black",
+          },
+          headerTintColor: "#fff",
+        }}
+      ></AuthenticationStack.Screen>
     </AuthenticationStack.Navigator>
   );
 };
@@ -68,7 +99,9 @@ const AppNavigator = (props) => {
       <AppStack.Screen name="Home">
         {(screenProps) => (
           <Home {...screenProps} updateAuthState={props.updateAuthState} />
+          
         )}
+
       </AppStack.Screen>
     </AppStack.Navigator>
   );
@@ -80,7 +113,7 @@ const Initializing = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShow(true);
-    }, 100000);
+    }, 1000000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -94,7 +127,7 @@ const Initializing = () => {
         backgroundColor: "black",
       }}
     >
-      {show ? <Landing /> : <ActivityIndicator size="large" color="red" />}
+      {show ? <ActivityIndicator size="large" color="red" /> : <Landing />}
     </View>
   );
 };
@@ -107,7 +140,6 @@ function App({ username }) {
   }, []);
 
   async function checkAuthState() {
-    // const user = Auth.currentAuthenticatedUser();
     try {
       await Auth.currentAuthenticatedUser();
       console.log("✅ User is signed in");

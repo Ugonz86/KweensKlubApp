@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { API, Auth } from "aws-amplify";
+import { listReservations } from "../graphql/queries";
+import {
+  createReservation as createReservationMutation,
+  updateReservation as updateReservationMutation,
+} from "../graphql/mutations";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,162 +12,361 @@ import {
   Text,
   Pressable,
   Button,
-  Platform,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function ReserverVip() {
-  const [currentTime, setCurrentTime] = useState(new Date(Date.now()));
-  const [datePicker, setDatePicker] = useState(false);
+const times = [
+  {
+    id: 1,
+    time: "9:00 PM",
+  },
+  {
+    id: 2,
+    time: "9:30 PM",
+  },
+  {
+    id: 3,
+    time: "10:00 PM",
+  },
+  {
+    id: 4,
+    time: "10:30 PM",
+  },
+  {
+    id: 5,
+    time: "11:00 PM",
+  },
+  {
+    id: 6,
+    time: "11:30 PM",
+  },
+  {
+    id: 7,
+    time: "12:00 PM",
+  },
+];
 
-  const [date, setDate] = useState(new Date());
+export default function ReserverVip({ navigation, fetchReservations }) {
+  // const [currentTime, setCurrentTime] = useState(new Date(Date.now()));
 
-  const [timePicker, setTimePicker] = useState(false);
+  // const [date, setDate] = useState(new Date());
 
-  const [time, setTime] = useState(new Date(Date.now()));
+  // const [time, setTime] = useState(new Date(Date.now()));
 
-  const [addUser, setAddUser] = useState(1);
+  const [date, setDate] = useState("");
 
-  const [tablesAvailable, setTablesAvailable] = useState(4);
+  const [time, setTime] = useState("");
 
-  function showDatePicker() {
-    setDatePicker(true);
+  const [party, setParty] = useState(1);
+
+  const [tablesAvailable, setTablesAvailable] = useState(0);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState(-1);
+
+  const [selectedTime, setSelectedTime] = useState(-1);
+
+  const [reservations, setReservations] = useState([]);
+
+  const handleDateClick = (index) => {
+    setDate(reservations[index].date);
+    setSelectedDate(index);
+    setSelectedTime(-1); //Reset time selection
+    setTime(""); //Reset time selection
+    setTablesAvailable(reservations[index].available);
+    console.log("Date selected is" + " ", index);
+  };
+
+  const handleTimeClick = (index) => {
+    setSelectedTime(index);
+    setTime(times[index].time);
+    console.log(selectedTime);
+    console.log("Time Selected is" + " ", index);
+  };
+
+  const makeReservation = async (event) => {
+    event.preventDefault();
+    console.log(date);
+    const apiData = await API.graphql({
+      query: listReservations,
+      variables: {
+        filter: {
+          date: {
+            eq: date,
+          },
+          party: {
+            eq: 0,
+          },
+        },
+      },
+    });
+    const reservationsFromAPI = apiData.data.listReservations.items;
+    const tablesAvailableIds = reservationsFromAPI.map((item) => item.id);
+    const tablesAvailable = tablesAvailableIds.length;
+    const tablesNeeded = Math.ceil(party / 5);
+
+    const data = {
+      time: time,
+      party: party,
+      user: Auth.user.attributes.email,
+      status: "reserved",
+      name: "Luis",
+    };
+
+    if (tablesAvailable < tablesNeeded) {
+      //If there are no sufficient tables available for total number of guests
+      alert(
+        "Not enough availability for party of " +
+          party +
+          ". Please reduce party size or check availability for another date."
+      );
+    } else {
+      for (let i = 0; i < tablesNeeded; i++) {
+        data["id"] = tablesAvailableIds[i];
+        await API.graphql({
+          query: updateReservationMutation,
+          variables: { input: data },
+        }).then(setModalVisible(true));
+      }
+    }
+    setSelectedDate(-1);
+    setSelectedTime(-1);
+    setParty(1);
+  };
+
+  async function fetchReservations() {
+    const apiData = await API.graphql({
+      query: listReservations,
+      variables: {
+        filter: {
+          date: {
+            // ge: 'Mon',
+          },
+        },
+      },
+    });
+    const dateNow = new Date(Date.now());
+    const year = dateNow.getFullYear();
+    const reservationsFromAPI = apiData.data.listReservations.items.filter(
+      (reservation) =>
+        Date.parse(reservation.date + " " + year + " 00:30:00") > Date.now()
+    );
+    reservationsFromAPI.sort((a, b) => {
+      return Date.parse(a.date + " " + year) > Date.parse(b.date + " " + year);
+    });
+    const uniqueDates = [
+      ...new Set(reservationsFromAPI.map((item) => item.date)), // Filter unique dates
+    ];
+    const dates = []; // Array to store objects for each unique date
+    uniqueDates.forEach((element, index) => {
+      // Push each unique date in an object and assigned ID
+      dates.push({ date: element, id: index });
+    });
+    reservationsFromAPI.forEach((element) => {
+      // Add the number of available slots/tables for each unique date
+      if (element.status == "open") {
+        const ind = dates.findIndex((object) => {
+          return object.date == element.date;
+        });
+        if (ind >= 0) {
+          dates[ind]["available"]
+            ? (dates[ind]["available"] = dates[ind]["available"] + 1)
+            : (dates[ind]["available"] = dates[ind]["available"] = 1);
+        }
+      }
+    });
+    console.log(dates);
+    setReservations(dates);
   }
 
-  function showTimePicker() {
-    setTimePicker(true);
-  }
-
-  function onDateSelected(event, value) {
-    setDate(value);
-    setDatePicker(false);
-  }
-
-  function onTimeSelected(event, value) {
-    setTime(value);
-    setTimePicker(false);
-  }
+  useEffect(() => {
+    fetchReservations();
+  }, []);
 
   const handleIncrement = () => {
-    if (addUser < 10) {
-      setAddUser(addUser + 1);
-      console.log(addUser);
+    if (party < 25) {
+      setParty(party + 1);
+      console.log(party);
     }
   };
 
   const handleDecrease = () => {
-    if (addUser > 1) {
-      setAddUser(addUser - 1);
-      console.log(addUser);
+    if (party > 1) {
+      setParty(party - 1);
+      console.log(party);
     }
   };
 
-  const handleSubmit = (data, e) => {
-    // e.preventDefault();
-    //Somehow implement the username(email) in the notification you will send
-   
-      setAddUser();
-      setDate();
-      setTime();
-      console.log(addUser, "Guests", date.toDateString(), time.toLocaleTimeString(["en-US"], { hour: '2-digit', minute: '2-digit' }), "data submitted");
-      
-   
-    handleTables();
+  const goToReservations = () => {
+    navigation.navigate("Reservations");
+    setModalVisible(false);
   };
 
-  const handleReservation = () => {
-    //if tablesAvailable is > 0 and addUser > 1,
-    //set date, time and guest number selected, 
-    //then decrement the current table number 
-    //and submit to userReservation.
+  const goToContactUs = () => {
+    navigation.navigate("ContactUs");
   };
 
-  const handleTables = () => {
-    if (tablesAvailable < 4 || tablesAvailable > 1) {
-      setTablesAvailable(tablesAvailable - 1);
-    } 
-  }
+  const goToMoreInfo = () => {
+    navigation.navigate("MoreInfo");
+    setModalVisible(false);
+  };
 
   return (
-    <SafeAreaView style={styles.body}>
-      <Text style={styles.text}>Date</Text>
-      <View style={styles.dateBox}>
-        {datePicker && (
-          <DateTimePicker
-            value={date}
-            mode={"date"}
-            display={Platform.OS === "ios" ? "spinner" : "default"}
-            is24Hour={true}
-            onChange={onDateSelected}
-            style={styles.datePicker}
-            textColor="white"
-            // dateFormat="day month"
-            minimumDate={new Date(Date.now())}
-            // maximumDate={new Date(2023, 30, 1)}
-          />
-        )}
+    <SafeAreaView as="form" style={styles.body}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        presentationStyle="overFullScreen"
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView2}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              Your VIP Reservation Confirmation
+            </Text>
+            <Text style={styles.confirmationText}>
+              {/* On {date.toDateString()} at{" "}
+              {time.toLocaleTimeString(["en-US"], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              {"\n"} For {party} guest(s) */}
+              On {date} at {time}
+              {"\n"}For {party} guest(s)
+            </Text>
+            <TouchableOpacity onPress={goToContactUs}>
+              <Text style={styles.modalCaption}>
+                The next step to secure your reservation is by sending a $55.75
+                deposit via ATH Movil to Kweens1211, otherwise, please{" "}
+                <Text style={{ color: "red", textDecorationLine: "underline" }}>
+                  contact us{" "}
+                </Text>
+                directly.
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goToMoreInfo}>
+              <Text style={styles.modalCaption}>
+                Please read our reservation rules{" "}
+                <Text style={{ color: "red", textDecorationLine: "underline" }}>
+                  here
+                </Text>
+                .
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Pressable onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={styles.textStyle}>Close</Text>
+          </Pressable>
+        </View>
+      </Modal>
 
-        {timePicker && (
-          <DateTimePicker
-            value={time}
-            mode={"time"}
-            display={Platform.OS === "ios" ? "spinner" : "default"}
-            is24Hour={false}
-            onChange={onTimeSelected}
-            style={styles.datePicker}
-            textColor="white"
-            minuteInterval={30}
-          />
-        )}
+      <View style={styles.slotsContainer}>
+        <Text style={styles.text}>Select a date</Text>
+        <ScrollView contentContainerStyle={styles.dateBox} horizontal={true}>
+          {reservations.map((item, index) => (
+            <View style={styles.slots} key={item.id} id={item.id}>
+              <Pressable
+                value={date}
+                onPress={() => handleDateClick(index)}
+                style={{
+                  backgroundColor: selectedDate === index ? "red" : "#080808",
+                  borderRadius: 10,
+                  borderWidth: 0.5,
+                }}
+              >
+                <Text style={styles.dateTimeSlot}>{item.date}</Text>
+              </Pressable>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+      {date ? (
+        <View style={styles.slotsContainer}>
+          <Text style={styles.text}>Arrival time</Text>
+          {tablesAvailable >= 1 ? (
+            <ScrollView
+              contentContainerStyle={styles.dateBox}
+              horizontal={true}
+            >
+              {times.map((item, index) => (
+                <View style={styles.slots} key={item.id} id={item.id}>
+                  <Pressable
+                    value={time}
+                    onPress={() => handleTimeClick(index)}
+                    style={{
+                      backgroundColor:
+                        selectedTime === index ? "red" : "#080808",
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text style={styles.dateTimeSlot}>{item.time}</Text>
+                  </Pressable>
+                </View>
+              ))}
+            </ScrollView>
+          ) : (
+            <View style={styles.dateBox2}>
+              <Text style={{ color: "white", textAlign: "center" }}>
+                Sorry, there are no tables available on this date. {"\n"}Please
+                select another date.
+              </Text>
+            </View>
+          )}
+        </View>
+      ) : null}
+      <View style={styles.guestContainer}>
+        <Text style={styles.text}>Number of guests</Text>
+        <View style={styles.guestBox}>
+          <Pressable onPress={handleDecrease}>
+            <FontAwesome5 name="user-minus" size={20} color="grey" />
+          </Pressable>
+          <Text style={{ color: "white", fontSize: 20, marginHorizontal: 15 }}>
+            {party ? party : 1}
+          </Text>
 
-        {!datePicker && (
-          <View style={{ margin: 10 }}>
+          <Pressable onPress={handleIncrement}>
+            <FontAwesome5 name="user-plus" size={20} color="grey" />
+          </Pressable>
+        </View>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        {date && time ? (
+          <View style={styles.submitButton}>
             <Button
-              title="Select Date"
-              color="grey"
-              onPress={showDatePicker}
-            ></Button>
+              onPress={makeReservation}
+              title="Reserve Now"
+              color="white"
+            />
+          </View>
+        ) : (
+          <View style={styles.submitButton2}>
+            <Button
+              disabled={true}
+              onPress={makeReservation}
+              title="Reserve Now"
+              color="white"
+            />
           </View>
         )}
+        <View style={styles.reservationHomeButton}>
+          <Button
+            onPress={goToReservations}
+            title="My Reservations"
+            color="white"
+          />
+        </View>
 
-        {!timePicker && (
-          <View style={{ margin: 10 }}>
-            <Button
-              title="Select Time"
-              color="grey"
-              onPress={showTimePicker}
-            ></Button>
-          </View>
-        )}
-
-        <Text style={styles.text2}>
-          Selection: {date ? date.toDateString() : currentTime.toDateString()}, {time ? time.toLocaleTimeString(["en-US"], { hour: '2-digit', minute: '2-digit' }) : currentTime.toLocaleTimeString("en-US")}
-        </Text>
-      </View>
-
-      <Text style={styles.text}>Guests</Text>
-
-      <View style={styles.guestBox}>
-        <Pressable onPress={handleIncrement}>
-          <FontAwesome5 name="user-plus" size={20} color="grey" />
-        </Pressable>
-
-        <Text style={{ color: "red", fontSize: 20, marginHorizontal: 15 }}>
-          {addUser ? addUser : 1}
-        </Text>
-
-        <Pressable onPress={handleDecrease}>
-          <FontAwesome5 name="user-minus" size={20} color="grey" />
-        </Pressable>
-      </View>
-
-      <Text style={styles.text}>Table Availability</Text>
-      <View style={styles.tableBox}>
-        <Text style={styles.table}>{tablesAvailable ? tablesAvailable : 4}</Text>
-      </View>
-      <View style={styles.reserveButton}>
-        <Button onPress={handleSubmit} title="Reserve" color="white" />
+        <View style={styles.reservationHomeButton}>
+          <Button onPress={goToMoreInfo} title="More Info" color="white" />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -171,70 +376,132 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     backgroundColor: "black",
-    justifyContent: "center",
     alignItems: "center",
-    // width: 400
+    justifyContent: "center",
   },
   text: {
-    color: "grey",
+    color: "#999999",
     fontSize: 25,
-    fontWeight: "bold",
-  },
-  text2: {
-    fontSize: 15,
-    color: "red",
-    padding: 3,
-    marginBottom: 10,
     textAlign: "center",
+    marginVertical: 5,
   },
   buttonText: {
     fontSize: 20,
   },
-  dateBox: {
-    padding: 10,
-    alignItems: "center",
-    backgroundColor: "#080808",
-    borderRadius: 10,
-    marginVertical: 20,
+  slotsContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    height: 150,
+  },
+  guestContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     width: 400,
+  },
+  dateBox: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#171717",
+    borderRadius: 10,
+    padding: 10,
+  },
+  dateBox2: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#171717",
+    borderRadius: 10,
+    paddingVertical: 20,
+    width: 375,
+  },
+  slots: {
+    padding: 10,
+    borderRadius: 10,
+  },
+  dateTimeSlot: {
+    color: "white",
+    fontSize: 15,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    height: 40,
   },
   guestBox: {
-    flexWrap: "wrap",
-    alignItems: "flex-start",
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-evenly",
-    backgroundColor: "#080808",
-    padding: 15,
+    backgroundColor: "#171717",
+    paddingVertical: 20,
     borderRadius: 10,
-    textAlign: "center",
-    marginVertical: 20,
-    width: 400,
+    width: 375,
   },
-  tableBox: {
-    backgroundColor: "#080808",
-    padding: 15,
-    borderRadius: 10,
-    textAlign: "center",
-    marginVertical: 20,
-    width: 400,
-    color: "white",
-  },
-  datePicker: {
-    justifyContent: "center",
-    alignItems: "flex-start",
-    width: 320,
-    height: 160,
-    display: "flex",
-    color: "white",
-  },
-  table: {
-    color: "red",
-    textAlign: "center",
-    fontSize: 20,
-  },
-  reserveButton: {
+  submitButton: {
     backgroundColor: "red",
     borderRadius: 10,
+    width: 200,
+    marginVertical: 10,
+  },
+  submitButton2: {
+    backgroundColor: "#171717",
+    borderRadius: 10,
+    width: 200,
+    marginVertical: 10,
+  },
+  reservationHomeButton: {
+    backgroundColor: "red",
+    borderRadius: 10,
+    marginVertical: 10,
+    width: 200,
+  },
+  resList: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 8,
+    backgroundColor: "red",
+    borderRadius: 10,
+    marginVertical: 10,
+    width: 300,
+  },
+  centeredView2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    flex: 1,
+    margin: 20,
+    backgroundColor: "black",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    justifyContent: "center",
+    width: 375,
+    paddingBottom: 50,
+  },
+  modalText: {
+    fontSize: 26,
+    color: "#999999",
+    marginVertical: 20,
+    fontWeight: "bold",
+  },
+  modalCaption: {
+    color: "grey",
+    fontSize: 18,
+    marginVertical: 10,
+    textAlign: "left",
+  },
+  confirmationText: {
+    color: "white",
+    fontSize: 20,
+    marginVertical: 20,
+  },
+  textStyle: {
+    color: "red",
+    marginVertical: 20,
+    textAlign: "center",
+  },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
     marginVertical: 20,
   },
 });

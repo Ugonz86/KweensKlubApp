@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { API, Storage, Auth } from "aws-amplify";
+import { S3Image } from "aws-amplify-react-native";
+import { listEvents } from "../graphql/queries";
 import {
   StyleSheet,
   View,
@@ -11,124 +14,68 @@ import {
 } from "react-native";
 
 export default function EventsView() {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      day: 1,
-      month: "Jan",
-      performer: "Valentina",
-      time: "10:00 pm to 1:00 am",
-      description: "Enter event description here.",
-      promo: require("../images/valentina.png"),
-    },
-    {
-      id: 2,
-      day: 2,
-      month: "Feb",
-      performer: "Vangie",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/vangie.png"),
-    },
-    {
-      id: 3,
-      day: 3,
-      month: "Mar",
-      performer: "Alexis Mateo",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/alexismateo.png"),
-    },
-    {
-      id: 4,
-      day: 4,
-      month: "Apr",
-      performer: "Alyssa Hunter",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/alyssahunter.png"),
-    },
-    {
-      id: 5,
-      day: 5,
-      month: "May",
-      performer: "Bianca Del Rio",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: "",
-      promo: require("../images/bianca.png"),
-    },
-    {
-      id: 6,
-      day: 6,
-      month: "Jun",
-      performer: "Jorgeous",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/jorgeous.png"),
-    },
-    {
-      id: 7,
-      day: 7,
-      month: "Jul",
-      performer: "Shangela",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: require("../images/shangela.png"),
-    },
-    {
-      id: 8,
-      day: 8,
-      month: "Aug",
-      performer: "Katya",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: "", //image
-    },
-    {
-      id: 9,
-      day: 9,
-      month: "Sep",
-      performer: "Trixie Matell",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: "", //image
-    },
-    {
-      id: 10,
-      day: 10,
-      month: "Oct",
-      performer: "Jujubee",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: "", //image
-    },
-    {
-      id: 11,
-      day: 11,
-      month: "Nov",
-      performer: "Jada Essence Hall",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: "", //image
-    },
-    {
-      id: 12,
-      day: 12,
-      month: "Dec",
-      performer: "Monet X Change",
-      time: "10:00 pm - 1:00 am",
-      description: "Lorem ipsum dolor sit amet, elit consectetur",
-      promo: "", //image
-    },
-  ]);
+  const [data, setData] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({});
 
+  async function fetchEvents() {
+    const apiData = await API.graphql({
+      query: listEvents,
+      variables: {
+        filter: {
+          // user: {
+          //   eq: Auth.user.attributes.email,
+          // },
+        },
+      },
+    });
+    const eventsFromAPI = apiData.data.listEvents.items.filter(
+      (event) => Date.parse(event.date + " " + event.year) > Date.now()
+    );
+
+    eventsFromAPI.sort((a, b) => {
+      return (
+        Date.parse(a.date + " " + a.year) > Date.parse(b.date + " " + b.year)
+      );
+    });
+
+    const formatEvents = [];
+    eventsFromAPI.forEach(async (event) => {
+      if (!event.image && event.name) {
+        const url = await Storage.get(event.name);
+        event.image = url;
+
+        return event;
+      }
+      const dat = new Date(event.date + " " + event.year);
+      formatEvents.push({
+        id: event.id,
+        name: event.name,
+        content: event.content,
+        weekDay: dat.toLocaleString("default", { weekday: "short" }),
+        day: dat.getDate(),
+        month: dat.toLocaleString("default", { month: "short" }),
+        startTime: event.startTime,
+        endTime: event.endTime,
+        year: event.year,
+        image: event.image
+      });
+      
+      
+    });
+
+    setData(formatEvents);
+    console.log(data);
+  }
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   const eventClickListener = (event) => {
-    console.log(event, "SUCCESS");
     setSelectedEvent(event);
+    console.log(selectedEvent);
     setModalVisible(true);
   };
 
@@ -146,25 +93,37 @@ export default function EventsView() {
         <View style={styles.centeredView2}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              On {selectedEvent.month} {selectedEvent.day}
-              {"\n"}
-              Guest Performer - {selectedEvent.performer}
-              {"\n"}
-              From {selectedEvent.time}
-              {"\n"}
-              {"\n"}
-              Event Details: {"\n"}
-              {selectedEvent.description}
+              <Text style={{}}>
+                <Text style={{ fontWeight: "bold", fontSize: 25 }}>
+                  On {selectedEvent.weekDay}, {selectedEvent.month} {selectedEvent.day}
+                  {"\n"}
+                </Text>
+                <Text style={{ fontWeight: "bold", color: "red" }}>
+                  {selectedEvent.name}
+                </Text>
+                {"\n"}
+                From {selectedEvent.startTime} to {selectedEvent.endTime}
+                {"\n"}
+                {"\n"}
+              </Text>
+
+              {/* <Text style={{ fontWeight: "bold" }}>
+                Content here: (Performer list, promo etc){"\n"}
+              </Text> */}
+
+              {selectedEvent.content}
               {"\n"}
             </Text>
-            <Image style={styles.image} source={selectedEvent.promo} />
-            <Pressable onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Close</Text>
-            </Pressable>
+            {/* Promo image here */}
+            <Image style={styles.image} source={{uri: selectedEvent.image}} />
+            {/* <S3Image imgKey={selectedEvent.image}/> */}
           </View>
+          <Pressable onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={styles.textStyle}>Close</Text>
+          </Pressable>
         </View>
       </Modal>
-
+{data ? 
       <FlatList
         enableEmptySections={true}
         style={styles.eventList}
@@ -177,12 +136,15 @@ export default function EventsView() {
             <TouchableOpacity onPress={() => eventClickListener(item)}>
               <View style={styles.eventBox}>
                 <View style={styles.eventDate}>
+                  <Text style={styles.eventMonth}>{item.weekDay}</Text>
                   <Text style={styles.eventDay}>{item.day}</Text>
                   <Text style={styles.eventMonth}>{item.month}</Text>
                 </View>
                 <View style={styles.eventContent}>
-                  <Text style={styles.eventTime}>{item.time}</Text>
-                  <Text style={styles.userName}>{item.performer}</Text>
+                  <Text style={styles.eventTime}>
+                    {item.startTime}-{item.endTime}
+                  </Text>
+                  <Text style={styles.userName}>{item.name}</Text>
                   <Text style={styles.description}>
                     Click for event details
                   </Text>
@@ -191,16 +153,19 @@ export default function EventsView() {
             </TouchableOpacity>
           );
         }}
-      />
+      /> : <Text style={{color: 'white', textAlign: 'center'}}>We are working on new events at the moment.</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "black",
+    // paddingTop: 60,
+    justifyContent: "center",
     paddingBottom: 50,
-    width: '100%'
+    // width: '100%'
   },
   eventList: {
     // marginTop: 20,
@@ -212,9 +177,11 @@ const styles = StyleSheet.create({
   },
   eventDate: {
     flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   eventDay: {
-    fontSize: 50,
+    fontSize: 30,
     color: "white",
     fontWeight: "600",
   },
@@ -228,7 +195,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     marginLeft: 10,
-    backgroundColor: "#080808",
+    // backgroundColor: "#171717",
+    borderWidth: 1,
+    borderColor: "grey",
     padding: 10,
     borderRadius: 5,
     overflow: "hidden",
@@ -244,22 +213,25 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 16,
     color: "red",
+    fontWeight: "bold",
   },
   centeredView2: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#080808",
+    paddingBottom: 50,
   },
   modalView: {
     flex: 1,
-    margin: 20,
+    // margin: 20,
     backgroundColor: "black",
     borderRadius: 10,
-    padding: 35,
+    padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    width: 386,
+    width: 375,
+    borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -268,6 +240,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    // marginVertical: 20
   },
   button: {
     borderRadius: 10,
@@ -282,26 +255,20 @@ const styles = StyleSheet.create({
   textStyle: {
     color: "red",
     textAlign: "center",
-    shadowColor: "red",
+
     fontSize: 15,
-    shadowRadius: 3,
-    shadowOpacity: 3,
-    shadowOffset: 3,
   },
   modalText: {
     fontSize: 20,
     color: "white",
-    marginBottom: 15,
+    marginBottom: 10,
+    padding: 10,
   },
   image: {
-    // resizeMode: 'contain',
-    height: 400,
-    width: 300,
-    marginBottom: 40,
+    height: 475,
+    width: 375,
     borderWidth: 1,
     borderRadius: 10,
     backgroundColor: "black",
   },
 });
-
-// console.disableYellowBox = true;

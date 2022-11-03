@@ -1,8 +1,33 @@
-type Candidate 
-  @model 
-  @auth(rules: [{ allow: public, operations: [create] }]) {
-   id: ID!
-   name: String!
-   email: AWSEmail!
-   message: String!
+type Candidate @model @auth(rules: [{ allow: public, operations: [create] }]) {
+  id: ID!
+  name: String!
+  email: AWSEmail!
+  message: String!
+}
+
+type User @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  username: String!
+  email: AWSEmail!
+}
+
+type Reservation @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  date: String
+  time: String
+  party: String
+  user: String
+  name: String
+  status: String
+}
+
+type Event @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+  date: String
+  year: String
+  startTime: String
+  endTime: String
+  image: String
+  content: String
+  name: String!
 }

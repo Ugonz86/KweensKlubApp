@@ -1,14 +1,69 @@
-import React from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Pressable,
+  ScrollView,
+} from "react-native";
+import { listEvents } from "../graphql/queries";
+import { API, Storage, Auth } from "aws-amplify";
 
-export default function Feed() {
+Auth.currentAuthenticatedUser().then((user) => {
+  console.log("Hello!", user.attributes.email);
+
+})
+
+export default function Feed({ navigation }) {
+  const [event, setEvent] = useState({});
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  async function fetchEvents() {
+    const apiData = await API.graphql({
+      query: listEvents,
+      variables: {
+        filter: {},
+      },
+    });
+    const eventsFromAPI = apiData.data.listEvents.items.filter(
+      (event) => Date.parse(event.date + " " + event.year) > Date.now()
+    );
+
+    eventsFromAPI.sort((a, b) => {
+      return (
+        Date.parse(a.date + " " + a.year) > Date.parse(b.date + " " + b.year)
+      );
+    });
+
+    setEvent(eventsFromAPI[0]);
+    console.log(eventsFromAPI[0]);
+  }
+
+  const onPressHandler = () => {
+    navigation.navigate("ReserveVip");
+  };
+
   return (
-    <View style={styles.body}>
-      <Image source={require("../images/flyer.jpeg")} style={styles.image} />
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>Event Details Here</Text>
-      </View>
-    </View>
+    <ScrollView contentContainerStyle={styles.body}>
+      {event ? (
+        <View style={styles.container}>
+          <Text style={styles.date}>{event.date}</Text>
+          <Image source={{ uri: event.image }} style={styles.image} />
+          <Pressable style={styles.buttonContainer} onPress={onPressHandler}>
+            <Text style={styles.button}>Reserve VIP</Text>
+          </Pressable>
+          <View style={styles.container}>
+            <Text style={styles.content}>{event.content}</Text>
+          </View>
+        </View>
+      ) : (
+        <Text style={{ color: "white" }}>Stay tuned.</Text>
+      )}
+    </ScrollView>
   );
 }
 
@@ -20,25 +75,37 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     color: "white",
   },
-  text: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
-    marginVertical: 25,
-  },
-  image: {
-    width: 400,
-    height: 500,
-    // resizeMode: 'stretch',
-    borderRadius: 10,
-    marginVertical: 15,
-  },
-  textContainer: {
-    backgroundColor: '#080808',
-    borderRadius: 5,
-    width: 400,
+  container: {
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
+  date: {
+    marginVertical: 20,
+    color: "white",
+    fontSize: 30,
+    fontWeight: "bold",
+  },
+  image: {
+    width: 375,
+    height: 470,
+    borderRadius: 10,
+    marginVertical: 20,
+  },
+  buttonContainer: {
+    backgroundColor: "red",
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 20,
+  },
+  button: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  content: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+  },
 });

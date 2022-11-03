@@ -61,6 +61,23 @@ export default function SignIn({ navigation, updateAuthState }) {
               Sign Up Now
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+            <Text style={styles.forgotPasswordButtonText}>
+              Forgot password?
+            </Text>
+            {/* <Text
+              style={{
+                fontWeight: "bold",
+                color: "grey",
+                fontSize: 18,
+                textAlign: "center",
+              }}
+            >
+              Sign Up Now
+            </Text> */}
+          </TouchableOpacity>
+
         </View>
       </View>
     </SafeAreaView>

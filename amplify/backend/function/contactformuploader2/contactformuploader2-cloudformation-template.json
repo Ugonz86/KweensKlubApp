@@ -180,7 +180,7 @@
                 "ses:SendEmail"
               ],
               "Effect": "Allow",
-              "Resource": "arn:aws:ses:us-west-2:618477552599:identity/kkappdevtester@gmail.com"
+              "Resource": "arn:aws:ses:us-west-2:618477552599:identity/ugonzalez86@gmail.com"
             }
           ]
         }

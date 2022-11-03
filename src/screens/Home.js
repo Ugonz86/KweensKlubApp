@@ -1,34 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Feed from "./Feed";
 import ContactUs from "./ContactUs";
-import SignOut from "./SignOut";
 import Memberships from "./Memberships";
 import Events from "./Events";
 import ReserveVip from "./ReserveVip";
+import Reservations from "./Reservations";
+import MoreInfo from "./MoreInfo";
 import AboutUs from "./AboutUs";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import { StyleSheet, Pressable, Text, TouchableOpacity } from "react-native";
-import { Auth, autoShowTooltip } from "aws-amplify";
+import { StyleSheet, Text, Image, View } from "react-native";
+import { Auth } from "aws-amplify";
 
 const Drawer = createDrawerNavigator();
 
-function Home({ updateAuthState, navigation }) {
-  // const onPressHandler = () => {
-  //   navigation.navigate("SignOut");
-  // };
+function Home({ updateAuthState }) {
+  async function signOut() {
+    try {
+      await Auth.signOut();
+      updateAuthState("loggedOut");
+    } catch (error) {
+      console.log("Error signing out: ", error);
+    }
+  }
 
-  // async function signOut() {
-  //   try {
-  //     await Auth.signOut();
-  //     updateAuthState("loggedOut");
-  //   } catch (error) {
-  //     console.log("Error signing out: ", error);
-  //   }
-  // }
+  const SignOut = () => {
+    signOut();
+    console.log("Signed Out!");
+  };
 
   return (
+
     <NavigationContainer independent={true} style={styles.navContainer}>
       <Drawer.Navigator
         initialRouteName="Feed"
@@ -38,10 +41,8 @@ function Home({ updateAuthState, navigation }) {
             width: 450,
             paddingTop: 100,
           },
-
           headerShown: true,
           swipeEnabled: true,
-          // gestureEnabled: true,
           headerTitleAlign: "center",
 
           headerStyle: {
@@ -53,18 +54,18 @@ function Home({ updateAuthState, navigation }) {
             fontSize: 20,
             fontWeight: "bold",
           },
-          
         }}
-        
       >
         <Drawer.Screen
           name="Feed"
           component={Feed}
           options={{
-            title: "Upcoming Event",
+            title: "Home",
+            headerTitle: "Our next event",
             drawerActiveBackgroundColor: "#1b1b1b",
             drawerInactiveTintColor: "#999999",
             drawerActiveTintColor: "white",
+
             drawerLabelStyle: { fontSize: 20 },
             drawerIcon: ({ focused }) => (
               <FontAwesome5
@@ -81,7 +82,7 @@ function Home({ updateAuthState, navigation }) {
           name="Events"
           component={Events}
           options={{
-            title: "Events",
+            title: "Upcoming Events",
             drawerActiveBackgroundColor: "#1b1b1b",
             drawerInactiveTintColor: "#999999",
             drawerActiveTintColor: "white",
@@ -136,6 +137,29 @@ function Home({ updateAuthState, navigation }) {
             ),
           }}
         />
+        <Drawer.Screen
+          name="Reservations"
+          component={Reservations}
+          options={{
+            title: "Reservations",
+            drawerInactiveTintColor: "#999999",
+            drawerItemStyle: {
+              display: "none",
+            },
+          }}
+        />
+
+        <Drawer.Screen
+          name="MoreInfo"
+          component={MoreInfo}
+          options={{
+            title: "More Info",
+            drawerInactiveTintColor: "#999999",
+            drawerItemStyle: {
+              display: "none",
+            },
+          }}
+        />
 
         <Drawer.Screen
           name="AboutUs"
@@ -187,10 +211,6 @@ function Home({ updateAuthState, navigation }) {
             labelStyle: {
               fontSize: 40,
             },
-            title: "Sign Out",
-            drawerActiveBackgroundColor: "#1b1b1b",
-            drawerInactiveTintColor: "#999999",
-            drawerActiveTintColor: "white",
             drawerLabelStyle: { fontSize: 20 },
             drawerIcon: ({ focused }) => (
               <FontAwesome5
@@ -201,17 +221,13 @@ function Home({ updateAuthState, navigation }) {
               />
             ),
           }}
-        />
+        ></Drawer.Screen>
+        
+
       </Drawer.Navigator>
-      {/* <TouchableOpacity
-        onPress={onPressHandler}
-        style={styles.signOut}
-      >
-        <FontAwesome5 name="sign-out-alt" size={25} color={"#999999"} />
-        <Text style={styles.text}>Sign Out</Text>
-      </TouchableOpacity> */}
-      
     </NavigationContainer>
+         
+
   );
 }
 
@@ -219,8 +235,7 @@ const styles = StyleSheet.create({
   navContainer: {},
   signOut: {
     alignItems: "center",
-    justifyContent: "center",
-    // padding: 40,
+    justifyContent: "space-evenly",
     backgroundColor: "black",
   },
   text: {
@@ -234,6 +249,12 @@ const styles = StyleSheet.create({
   //   marginBottom: 80,
   //   alignSelf: "center",
   // },
+  image: {
+    width: 80,
+    height: 80,
+    resizeMode: "contain",
+    tintColor: "white",
+  },
 });
 
 export default Home;

@@ -25,7 +25,7 @@ export default function ConfirmSignUp({ navigation }) {
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>Confirm Sign Up</Text>
+        {/* <Text style={styles.title}>Confirm Sign Up</Text> */}
         <AppTextInput
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -51,7 +51,7 @@ export default function ConfirmSignUp({ navigation }) {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "black",
   },
   container: {
     flex: 1,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: "#202020",
+    color: "grey",
     fontWeight: "500",
     marginVertical: 15,
   },

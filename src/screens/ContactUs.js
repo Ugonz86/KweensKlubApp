@@ -12,6 +12,7 @@ export default function App() {
     handleSubmit,
     watch,
     register,
+    resetField,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -24,7 +25,6 @@ export default function App() {
   renderCount++;
 
   const message = watch("message");
-  // console.log(watch(message))
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
@@ -38,95 +38,106 @@ export default function App() {
           },
         }).then(
           alert("Your message has been submitted. Thank you!"),
-          console.log("success!")
         );
       } catch {
         alert(errors);
-        console.log("error");
       }
     } else {
       alert("Please make sure your entries are valid!");
-      console.log("invalid");
     }
-    console.log(data);
+    resetField("name");
+    resetField("email");
+    resetField("message");
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Some Text Here</Text>
-      {errors.name && (
-        <Text style={{ color: "red" }}>This field is required.</Text>
-      )}
-      <Controller
-        name="name"
-        control={control}
-        rules={{
-          required: true,
-          minLength: 5,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            placeholder="Full Name"
-            {...register("name")}
-          />
+    <View style={styles.body}>
+      <View style={styles.container}>
+        <Text style={styles.title}>
+          If you would like to provide us with any feedback, request special
+          information or submit a business proposal, please fill out this form
+          and let us know about it.
+        </Text>
+        {errors.name && (
+          <Text style={{ color: "red" }}>This field is required.</Text>
         )}
-      />
+        <Controller
+          name="name"
+          control={control}
+          rules={{
+            required: true,
+            minLength: 5,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              placeholder="Full Name"
+              placeholderTextColor="grey"
+              {...register("name")}
+            />
+          )}
+        />
 
-      {errors.email && (
-        <Text style={{ color: "red" }}>This field is required.</Text>
-      )}
-      <Controller
-        name="email"
-        control={control}
-        rules={{
-          required: true,
-          maxLength: 25,
-          pattern:
-            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.input}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            placeholder="Email"
-            {...register("email")}
-          />
+        {errors.email && (
+          <Text style={{ color: "red" }}>This field is required.</Text>
         )}
-      />
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: true,
+            maxLength: 50,
+            pattern:
+              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={styles.input}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              placeholder="Email"
+              placeholderTextColor="grey"
+              {...register("email")}
+            />
+          )}
+        />
 
-      {errors.message && (
-        <Text style={{ color: "red" }}>This field is required.</Text>
-      )}
-      <Controller
-        name="message"
-        defaultValue=""
-        control={control}
-        renderCount={renderCount}
-        rules={{
-          required: true,
-          minLength: 50,
-          maxLength: 500,
-          validation: {},
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            style={styles.msg}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            multiline={true}
-            placeholder="Message"
-            {...register("message")}
-          />
+        {errors.message && (
+          <Text style={{ color: "red" }}>This field is required.</Text>
         )}
-      />
-      <Text style={{ fontSize: 13, color: "grey" }}>{message.length}/500</Text>
+        <Controller
+          name="message"
+          defaultValue=""
+          control={control}
+          renderCount={renderCount}
+          rules={{
+            required: {
+              value: true,
+            },
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              minLength={100}
+              maxLength={500}
+              style={styles.msg}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              multiline={true}
+              placeholder="Message"
+              placeholderTextColor="grey"
+              {...register("message")}
+            />
+          )}
+        />
+        <Text style={{ fontSize: 13, color: "grey" }}>
+          {message.length}/500
+        </Text>
+      </View>
       <View style={styles.submitButton}>
         <Button
           color="white"
@@ -139,28 +150,31 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  body: {
     flex: 1,
     backgroundColor: "black",
-    color: "white",
+    padding: 10,
+    justifyContent: "center",
     alignItems: "center",
-    paddingTop: 60
-    // justifyContent: "center",
+    paddingBottom: 50,
+  },
+  container: {
+    alignItems: "center",
+    height: "100%",
+    justifyContent: "center",
+    width: 375,
   },
   title: {
-    backgroundColor: "#080808",
-    width: 400,
+    width: 375,
     borderRadius: 5,
-    color: "grey",
-    marginVertical: 20,
+    color: "lightgrey",
+    marginVertical: 10,
     padding: 10,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    textAlign: 'center'
+    textAlign: "center",
   },
   input: {
     backgroundColor: "lightgrey",
-    width: 400,
+    width: 375,
     height: 40,
     marginVertical: 20,
     borderRadius: 5,
@@ -168,7 +182,7 @@ const styles = StyleSheet.create({
   },
   msg: {
     backgroundColor: "lightgrey",
-    width: 400,
+    width: 375,
     height: 200,
     marginVertical: 20,
     borderRadius: 5,
@@ -178,6 +192,6 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: "red",
     borderRadius: 5,
-    top: 50,
+    width: 200
   },
 });

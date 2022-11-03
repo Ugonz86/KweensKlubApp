@@ -7,14 +7,20 @@ import AppButton from "../components/AppButton";
 
 export default function SignUp({ navigation }) {
   const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   async function signUp() {
     try {
-      await Auth.signUp({ username, password, attributes: { email } });
+      await Auth.signUp({
+        username,
+        password,
+        attributes: { email, fullName },
+      });
       console.log("✅ Sign-up Confirmed");
       navigation.navigate("ConfirmSignUp");
     } catch (error) {
+      alert("Error signing up...", error)
       console.log("❌ Error signing up...", error);
     }
   }
@@ -30,10 +36,19 @@ export default function SignUp({ navigation }) {
           value={username}
           onChangeText={(text) => setUsername(text)}
           leftIcon="account"
-          placeholder="Enter username"
+          placeholder="Enter email"
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"
+        />
+        <AppTextInput
+          value={fullName}
+          onChangeText={(text) => setFullName(text)}
+          leftIcon="account"
+          placeholder="Enter full name"
+          autoCapitalize="none"
+          keyboardType="default"
+          textContentType="name"
         />
         <AppTextInput
           value={password}
@@ -70,8 +85,10 @@ export default function SignUp({ navigation }) {
             >
               Sign In
             </Text>
+            {/* <Text style={{color: 'white'}} onPress={() => navigation.navigate("ConfirmSignUp")}>Confirm </Text> */}
           </TouchableOpacity>
         </View>
+        
       </View>
     </SafeAreaView>
   );
