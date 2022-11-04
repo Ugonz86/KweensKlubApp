@@ -8,14 +8,12 @@ import AppButton from "../components/AppButton";
 export default function ForgotPassword({ navigation }) {
   const [userName, setUserName] = useState("");
 
-  // Send confirmation code to user's email
   async function forgotPassword() {
     try {
       await Auth.forgotPassword(userName);
       navigation.navigate("ResetPassword");
     } catch (error) {
-      alert(error);
-      console.log("Forgot Password Action Error", error);
+      alert(error.code, "There was an error. Please try again.");
     }
   }
 

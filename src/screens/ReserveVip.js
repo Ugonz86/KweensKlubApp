@@ -50,12 +50,6 @@ const times = [
 ];
 
 export default function ReserverVip({ navigation, fetchReservations }) {
-  // const [currentTime, setCurrentTime] = useState(new Date(Date.now()));
-
-  // const [date, setDate] = useState(new Date());
-
-  // const [time, setTime] = useState(new Date(Date.now()));
-
   const [date, setDate] = useState("");
 
   const [time, setTime] = useState("");
@@ -75,22 +69,18 @@ export default function ReserverVip({ navigation, fetchReservations }) {
   const handleDateClick = (index) => {
     setDate(reservations[index].date);
     setSelectedDate(index);
-    setSelectedTime(-1); //Reset time selection
-    setTime(""); //Reset time selection
+    setSelectedTime(-1);
+    setTime("");
     setTablesAvailable(reservations[index].available);
-    console.log("Date selected is" + " ", index);
   };
 
   const handleTimeClick = (index) => {
     setSelectedTime(index);
     setTime(times[index].time);
-    console.log(selectedTime);
-    console.log("Time Selected is" + " ", index);
   };
 
   const makeReservation = async (event) => {
     event.preventDefault();
-    console.log(date);
     const apiData = await API.graphql({
       query: listReservations,
       variables: {
@@ -114,11 +104,9 @@ export default function ReserverVip({ navigation, fetchReservations }) {
       party: party,
       user: Auth.user.attributes.email,
       status: "reserved",
-      name: "Luis",
     };
 
     if (tablesAvailable < tablesNeeded) {
-      //If there are no sufficient tables available for total number of guests
       alert(
         "Not enough availability for party of " +
           party +
@@ -143,9 +131,7 @@ export default function ReserverVip({ navigation, fetchReservations }) {
       query: listReservations,
       variables: {
         filter: {
-          date: {
-            // ge: 'Mon',
-          },
+          date: {},
         },
       },
     });
@@ -159,15 +145,13 @@ export default function ReserverVip({ navigation, fetchReservations }) {
       return Date.parse(a.date + " " + year) > Date.parse(b.date + " " + year);
     });
     const uniqueDates = [
-      ...new Set(reservationsFromAPI.map((item) => item.date)), // Filter unique dates
+      ...new Set(reservationsFromAPI.map((item) => item.date)),
     ];
-    const dates = []; // Array to store objects for each unique date
+    const dates = [];
     uniqueDates.forEach((element, index) => {
-      // Push each unique date in an object and assigned ID
       dates.push({ date: element, id: index });
     });
     reservationsFromAPI.forEach((element) => {
-      // Add the number of available slots/tables for each unique date
       if (element.status == "open") {
         const ind = dates.findIndex((object) => {
           return object.date == element.date;
@@ -179,7 +163,6 @@ export default function ReserverVip({ navigation, fetchReservations }) {
         }
       }
     });
-    console.log(dates);
     setReservations(dates);
   }
 
@@ -190,14 +173,12 @@ export default function ReserverVip({ navigation, fetchReservations }) {
   const handleIncrement = () => {
     if (party < 25) {
       setParty(party + 1);
-      console.log(party);
     }
   };
 
   const handleDecrease = () => {
     if (party > 1) {
       setParty(party - 1);
-      console.log(party);
     }
   };
 
@@ -232,12 +213,6 @@ export default function ReserverVip({ navigation, fetchReservations }) {
               Your VIP Reservation Confirmation
             </Text>
             <Text style={styles.confirmationText}>
-              {/* On {date.toDateString()} at{" "}
-              {time.toLocaleTimeString(["en-US"], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              {"\n"} For {party} guest(s) */}
               On {date} at {time}
               {"\n"}For {party} guest(s)
             </Text>
@@ -466,7 +441,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: '100%',
+    width: "100%",
     backgroundColor: "black",
   },
   modalView: {

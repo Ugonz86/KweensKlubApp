@@ -1,7 +1,5 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function Memberships({ navigation }) {
   return (
@@ -26,32 +24,14 @@ export default function Memberships({ navigation }) {
           }}
           onPress={() => navigation.navigate("ContactUs")}
         >
-          {/* <FontAwesome5
-            name="envelope"
-            size={30}
-            color="grey"
-            style={{ marginVertical: 10 }}
-          /> */}
           <Text style={{ color: "white", marginVertical: 10, fontSize: 20 }}>
             Request Membership
           </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.textContainer}>
-        <Text
-          style={{
-            // color: "white",
-            // justifyContent: "center",
-            // height: 400,
-            // backgroundColor: 'pink',
-            // // flex: 1,
-            // flexDirection:'column',
-            // flexWrap: "wrap",
-          }}
-        >
-          <Text style={{ fontWeight: "bold", color: "white" }}>
-            {/* Gold Membership */}
-          </Text>
+        <Text>
+          <Text style={{ fontWeight: "bold", color: "white" }}></Text>
           <Text>Duration: 3 years</Text>
           <Text>No lines</Text>
           <Text>Exclusive VIP area access</Text>
@@ -81,7 +61,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 15,
   },
-  contactButton: {},
   textContainer: {
     alignItems: "center",
     borderRadius: 5,

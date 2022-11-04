@@ -12,11 +12,9 @@ export default function SignIn({ navigation, updateAuthState }) {
   async function signIn() {
     try {
       await Auth.signIn(username, password);
-      console.log("✅ Success", username);
       updateAuthState("loggedIn");
     } catch (error) {
-      console.log("❌ Error signing in...", error);
-      alert("Error. Please try again.");
+      alert("Error signing in. Please try again.");
     }
   }
 
@@ -62,22 +60,13 @@ export default function SignIn({ navigation, updateAuthState }) {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
             <Text style={styles.forgotPasswordButtonText}>
               Forgot password?
             </Text>
-            {/* <Text
-              style={{
-                fontWeight: "bold",
-                color: "grey",
-                fontSize: 18,
-                textAlign: "center",
-              }}
-            >
-              Sign Up Now
-            </Text> */}
           </TouchableOpacity>
-
         </View>
       </View>
     </SafeAreaView>

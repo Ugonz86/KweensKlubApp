@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { API, Storage, Auth } from "aws-amplify";
-import Amplify from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 import { listReservations } from "../graphql/queries";
 import {
   deleteReservation as deleteReservationMutation,
@@ -16,7 +15,6 @@ import {
 } from "react-native";
 
 export default function Reservations({ navigation }) {
-  const [userName, setUserName] = useState(Auth.user.username);
   const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
@@ -35,11 +33,8 @@ export default function Reservations({ navigation }) {
       },
     });
     const reservationsFromAPI = apiData.data.listReservations.items;
-    console.log(reservationsFromAPI);
     const consolidatedReservations = [];
     reservationsFromAPI.forEach((reservation) => {
-      // Search if consolidatedReservations already has a reservation with the same date;
-      // ind will be -1 if no reservation with the same date is found
       let ind = consolidatedReservations.findIndex((item) => {
         return (
           item.date == reservation.date && item.status == reservation.status
@@ -47,7 +42,6 @@ export default function Reservations({ navigation }) {
       });
 
       if (ind < 0) {
-        //Create object for consolidated reservation and added to new array
         consolidatedReservations.push({
           date: reservation.date,
           party: reservation.party,
@@ -56,12 +50,9 @@ export default function Reservations({ navigation }) {
           consolidatedIDs: [reservation.id],
         });
       } else {
-        //If consolidated reservation already exists, then add reservation ID from dynamo DB to consolidatedIDs prop
         consolidatedReservations[ind]["consolidatedIDs"].push(reservation.id);
       }
     });
-    console.log(consolidatedReservations);
-
     setReservations(consolidatedReservations);
   }
 
@@ -71,7 +62,6 @@ export default function Reservations({ navigation }) {
     };
     for (let i = 0; i < ids.length; i++) {
       data["id"] = ids[i];
-      console.log(data);
       await API.graphql({
         query: updateReservationMutation,
         variables: { input: data },
@@ -94,10 +84,7 @@ export default function Reservations({ navigation }) {
       <View style={styles.container}>
         <ScrollView
           contentContainerStyle={{
-            // color: "white",
-            // flex: 1,
             fontSize: 20,
-            // backgroundColor: "yellow",
             width: 400,
             padding: 10,
             marginVertical: 10,
@@ -158,7 +145,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 50,
-    // height: '100%',
   },
   container: {
     width: 400,
@@ -177,9 +163,7 @@ const styles = StyleSheet.create({
   reserveVIPbutton: {
     backgroundColor: "red",
     borderRadius: 10,
-    // marginBottom: 20,
     width: 100,
-    // textAlign: 'center',
     justifyContent: "center",
     alignItems: "center",
     padding: 10,

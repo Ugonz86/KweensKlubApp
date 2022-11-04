@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { API, Storage, Auth } from "aws-amplify";
-import { S3Image } from "aws-amplify-react-native";
 import { listEvents } from "../graphql/queries";
 import {
   StyleSheet,
@@ -24,9 +23,7 @@ export default function EventsView() {
       query: listEvents,
       variables: {
         filter: {
-          // user: {
-          //   eq: Auth.user.attributes.email,
-          // },
+
         },
       },
     });
@@ -60,13 +57,9 @@ export default function EventsView() {
         endTime: event.endTime,
         year: event.year,
         image: event.image
-      });
-      
-      
+      });      
     });
-
     setData(formatEvents);
-    console.log(data);
   }
 
   useEffect(() => {
@@ -75,7 +68,6 @@ export default function EventsView() {
 
   const eventClickListener = (event) => {
     setSelectedEvent(event);
-    console.log(selectedEvent);
     setModalVisible(true);
   };
 
@@ -106,17 +98,10 @@ export default function EventsView() {
                 {"\n"}
                 {"\n"}
               </Text>
-
-              {/* <Text style={{ fontWeight: "bold" }}>
-                Content here: (Performer list, promo etc){"\n"}
-              </Text> */}
-
               {selectedEvent.content}
               {"\n"}
             </Text>
-            {/* Promo image here */}
             <Image style={styles.image} source={{uri: selectedEvent.image}} />
-            {/* <S3Image imgKey={selectedEvent.image}/> */}
           </View>
           <Pressable onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.textStyle}>Close</Text>
@@ -162,13 +147,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
-    // paddingTop: 60,
     justifyContent: "center",
     paddingBottom: 50,
-    // width: '100%'
   },
   eventList: {
-    // marginTop: 20,
   },
   eventBox: {
     width: 400,
@@ -195,7 +177,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "flex-start",
     marginLeft: 10,
-    // backgroundColor: "#171717",
     borderWidth: 1,
     borderColor: "grey",
     padding: 10,
@@ -224,7 +205,6 @@ const styles = StyleSheet.create({
   },
   modalView: {
     flex: 1,
-    // margin: 20,
     backgroundColor: "black",
     borderRadius: 10,
     padding: 20,
@@ -240,7 +220,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    // marginVertical: 20
   },
   button: {
     borderRadius: 10,

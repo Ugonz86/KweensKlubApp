@@ -92,18 +92,14 @@ const AuthenticationNavigator = (props) => {
 const AppNavigator = (props) => {
   return (
     <AppStack.Navigator
-    
       screenOptions={{
         headerShown: false,
-        
       }}
     >
       <AppStack.Screen name="Home">
         {(screenProps) => (
           <Home {...screenProps} updateAuthState={props.updateAuthState} />
-          
         )}
-
       </AppStack.Screen>
     </AppStack.Navigator>
   );
@@ -119,7 +115,6 @@ const Initializing = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  console.log("initializing...");
   return (
     <View
       style={{
@@ -134,7 +129,7 @@ const Initializing = () => {
   );
 };
 
-function App({ username }) {
+function App() {
   const [isUserLoggedIn, setUserLoggedIn] = useState("initializing");
 
   useEffect(() => {
@@ -144,10 +139,8 @@ function App({ username }) {
   async function checkAuthState() {
     try {
       await Auth.currentAuthenticatedUser();
-      console.log("✅ User is signed in");
       setUserLoggedIn("loggedIn");
     } catch (err) {
-      console.log("❌ User is not signed in");
       setUserLoggedIn("loggedOut");
     }
   }
@@ -169,7 +162,6 @@ function App({ username }) {
   );
 }
 
-const styles = StyleSheet.create({
-});
+const styles = StyleSheet.create({});
 
 export default App;

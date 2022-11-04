@@ -12,25 +12,20 @@ export default function ConfirmSignUp({ navigation }) {
   async function confirmSignUp() {
     try {
       await Auth.confirmSignUp(username, authCode);
-      console.log("✅ Code confirmed");
       navigation.navigate("SignIn");
     } catch (error) {
-      console.log(
-        "❌ Verification code does not match. Please enter a valid verification code.",
-        error.code
-      );
+      alert(error.code, "Verification code does not match. Please enter a valid verification code.");
     }
   }
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
-        {/* <Text style={styles.title}>Confirm Sign Up</Text> */}
         <AppTextInput
           value={username}
           onChangeText={(text) => setUsername(text)}
           leftIcon="account"
-          placeholder="Enter username"
+          placeholder="Enter email"
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"

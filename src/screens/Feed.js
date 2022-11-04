@@ -8,12 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { listEvents } from "../graphql/queries";
-import { API, Storage, Auth } from "aws-amplify";
-
-Auth.currentAuthenticatedUser().then((user) => {
-  console.log("Hello!", user.attributes.email);
-
-})
+import { API } from "aws-amplify";
 
 export default function Feed({ navigation }) {
   const [event, setEvent] = useState({});
@@ -32,15 +27,12 @@ export default function Feed({ navigation }) {
     const eventsFromAPI = apiData.data.listEvents.items.filter(
       (event) => Date.parse(event.date + " " + event.year) > Date.now()
     );
-
     eventsFromAPI.sort((a, b) => {
       return (
         Date.parse(a.date + " " + a.year) > Date.parse(b.date + " " + b.year)
       );
     });
-
     setEvent(eventsFromAPI[0]);
-    console.log(eventsFromAPI[0]);
   }
 
   const onPressHandler = () => {
@@ -56,10 +48,7 @@ export default function Feed({ navigation }) {
           <Pressable style={styles.buttonContainer} onPress={onPressHandler}>
             <Text style={styles.button}>Reserve VIP</Text>
           </Pressable>
-          <View style={styles.container}>
-            {/* <Text style={styles.content}>{event.content}</Text> */}
- 
-          </View>
+          <View style={styles.container}></View>
         </View>
       ) : (
         <Text style={{ color: "white" }}>Stay tuned.</Text>
@@ -77,9 +66,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   container: {
-    // flex: 1,
-    // position: "absolute",
-    // backgroundColor: "black",
     padding: 10,
     justifyContent: "center",
     alignItems: "center",

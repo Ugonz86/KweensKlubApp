@@ -10,16 +10,12 @@ export default function ResetPassword({ navigation }) {
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  // Collect confirmation code and new password, then
   async function resetPassword() {
     try {
-      // const data = { user, code, newPassword};
       await Auth.forgotPasswordSubmit(userName, code, newPassword);
-      console.log("Data Submitted Successfully!", userName, code, newPassword);
       navigation.navigate("SignIn");
     } catch (error) {
-      alert(error);
-      console.log("Password Reset Action Error", error);
+      alert(error, "Password Reset Action Error. Please try again.");
     }
   }
 

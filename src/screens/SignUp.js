@@ -10,18 +10,17 @@ export default function SignUp({ navigation }) {
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+
   async function signUp() {
     try {
       await Auth.signUp({
         username,
         password,
-        attributes: { email, fullName },
+        attributes: { email },
       });
-      console.log("✅ Sign-up Confirmed");
       navigation.navigate("ConfirmSignUp");
     } catch (error) {
-      alert("Error signing up...", error)
-      console.log("❌ Error signing up...", error);
+      alert(error, "Error signing up. Please try again.")
     }
   }
   return (
@@ -64,7 +63,7 @@ export default function SignUp({ navigation }) {
           value={email}
           onChangeText={(text) => setEmail(text)}
           leftIcon="email"
-          placeholder="Enter email"
+          placeholder="Confirm email"
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"
@@ -85,7 +84,6 @@ export default function SignUp({ navigation }) {
             >
               Sign In
             </Text>
-            {/* <Text style={{color: 'white'}} onPress={() => navigation.navigate("ConfirmSignUp")}>Confirm </Text> */}
           </TouchableOpacity>
         </View>
         
